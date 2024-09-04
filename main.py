@@ -49,7 +49,7 @@ class MoodleBot:
 
     async def handle_login(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         user_input = update.message.text
-        self.logger.info('Logging "' + user_input + '" into Moodle')
+        self.logger.info('Trying  to log in "' + user_input + '" into Moodle')
 
         if self.moodle.login(user_input, context):
             self.logger.info('User "' + update.message.text + '" logged')
@@ -59,6 +59,7 @@ class MoodleBot:
             text = f"Bienvenido, {context.user_data['user_name']}. ¿Qué deseas saber sobre tu aula virtual?"
             await self.show_user_options(update, text)
         else:
+            self.logger.info('User "' + user_input + '" not found')
             await update.message.reply_text(
                 "Lo siento, no he podido validar tu usuario. ¿Puedes proporcionarme tu nombre de usuario del aula " +
                 "virtual?")
