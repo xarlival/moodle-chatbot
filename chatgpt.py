@@ -1,9 +1,11 @@
+from logging import Logger
+
 from openai import OpenAI
 
 
 class ChatGPT:
 
-    def __init__(self, logger) -> None:
+    def __init__(self, logger: Logger) -> None:
         self.logger = logger
         self.logger.info('Starting ChatGPT')
 

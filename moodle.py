@@ -229,7 +229,7 @@ class Moodle:
         return response
 
     def user_pending_messages(self, context: ContextTypes.DEFAULT_TYPE) -> str:
-        messages = self.get_messages(context.user_data['userid'])
+        messages = self.get_pending_messages_and_notifications(context.user_data['userid'])
         sorted_messages = sorted(messages, key=lambda x: x['timecreated'])
         response = 'Tienes los siguientes mensajes sin leer:'
 
@@ -241,7 +241,7 @@ class Moodle:
         return response
 
     def user_pending_notifications(self, context: ContextTypes.DEFAULT_TYPE) -> str:
-        messages = self.get_messages(context.user_data['userid'])
+        messages = self.get_pending_messages_and_notifications(context.user_data['userid'])
         response = 'Tienes las siguientes notificaciones sin leer:'
 
         for message in messages:

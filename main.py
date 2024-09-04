@@ -59,7 +59,7 @@ class MoodleBot:
             text = f"Bienvenido, {context.user_data['user_name']}. ¿Qué deseas saber sobre tu aula virtual?"
             await self.show_user_options(update, text)
         else:
-            self.logger.info('User "' + user_input + '" not found')
+            self.logger.error('User "' + user_input + '" not found')
             await update.message.reply_text(
                 "Lo siento, no he podido validar tu usuario. ¿Puedes proporcionarme tu nombre de usuario del aula " +
                 "virtual?")
@@ -92,10 +92,10 @@ class MoodleBot:
             response = self.moodle.pending_quizzes(context)
             await self.send_message(update, user_input, response)
         elif user_input == 'mensajes pendientes':
-            response = self.moodle.user_messages(context)
+            response = self.moodle.user_pending_messages(context)
             await self.send_message(update, user_input, response)
         elif user_input == 'notificaciones pendientes':
-            response = self.moodle.user_notifications(context)
+            response = self.moodle.user_pending_notifications(context)
             await self.send_message(update, user_input, response)
         elif user_input == 'eventos de la proxima semana':
             response = self.moodle.next_week_events(context)
@@ -106,6 +106,7 @@ class MoodleBot:
             if response:
                 await update.message.reply_text(response)
             else:
+                self.logger.error('No response given to "' + user_input + '"')
                 await update.message.reply_text("Lo siento, no te he entendido")
 
     async def send_message(self, update: Update, user_input: str, bot_output: str) -> None:
