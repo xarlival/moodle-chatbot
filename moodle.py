@@ -230,11 +230,16 @@ class Moodle:
 
     def user_pending_messages(self, context: ContextTypes.DEFAULT_TYPE) -> str:
         messages = self.get_pending_messages_and_notifications(context.user_data['userid'])
-        sorted_messages = sorted(messages, key=lambda x: x['timecreated'])
-        response = 'Tienes los siguientes mensajes sin leer:'
+        messages = [message for message in messages if message['notification'] == 0]
 
-        for message in sorted_messages:
-            if message['notification'] == 0:
+        if len(messages) == 0:
+            response = 'No tienes mensajes sin leer'
+
+        else:
+            sorted_messages = sorted(messages, key=lambda x: x['timecreated'])
+            response = 'Tienes los siguientes mensajes sin leer:'
+
+            for message in sorted_messages:
                 date = datetime.fromtimestamp(message['timecreated']).strftime(self.datetime_format)
                 response += '\n• {} [{}]: "{}".'.format(message['userfromfullname'], date, message['smallmessage'])
 
@@ -242,10 +247,15 @@ class Moodle:
 
     def user_pending_notifications(self, context: ContextTypes.DEFAULT_TYPE) -> str:
         messages = self.get_pending_messages_and_notifications(context.user_data['userid'])
-        response = 'Tienes las siguientes notificaciones sin leer:'
+        messages = [message for message in messages if message['notification'] == 1]
 
-        for message in messages:
-            if message['notification'] == 1:
+        if len(messages) == 0:
+            response = 'No tienes notificaciones sin leer'
+
+        else:
+            response = 'Tienes las siguientes notificaciones sin leer:'
+
+            for message in messages:
                 date = datetime.fromtimestamp(message['timecreated']).strftime(self.datetime_format)
                 response += '\n• [{}] {}.'.format(date, message['smallmessage'])
 
