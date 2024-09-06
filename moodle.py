@@ -257,6 +257,9 @@ class Moodle:
 
             for message in messages:
                 date = datetime.fromtimestamp(message['timecreated']).strftime(self.datetime_format)
-                response += '\n• [{}] {}.'.format(date, message['smallmessage'])
+                if message['smallmessage']:
+                    response += '\n• [{}] {}.'.format(date, message['smallmessage'])
+                elif message['fullmessage']:
+                    response += '\n• [{}] {}.'.format(date, message['fullmessage'])
 
         return response
