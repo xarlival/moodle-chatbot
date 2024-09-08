@@ -130,7 +130,7 @@ class MoodleBot:
         application = Application.builder().token(os.getenv('TELEGRAM_API_KEY')).build()
 
         application.add_handler(CommandHandler("start", self.start))
-        application.add_handler(CommandHandler("options", self.help))
+        application.add_handler(CommandHandler("options", self.options))
         application.add_handler(CommandHandler("help", self.help))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
 
