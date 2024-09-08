@@ -28,6 +28,9 @@ class MoodleBot:
         await update.message.reply_text("¡Bienvenido! Soy tu asistente virtual de Moodle.\n"
                                         "Para comenzar, proporciona tu nombre de usuario en Moodle.")
 
+    async def options(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+        await self.show_user_options(update, '¿Qué deseas saber sobre tu aula virtual?')
+
     async def help(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text("Soy un bot conversacional creado para proporcionarte información sobre tus " +
                                         "cursos del aula virtual alojado en Moodle." +
@@ -127,6 +130,7 @@ class MoodleBot:
         application = Application.builder().token(os.getenv('TELEGRAM_API_KEY')).build()
 
         application.add_handler(CommandHandler("start", self.start))
+        application.add_handler(CommandHandler("options", self.help))
         application.add_handler(CommandHandler("help", self.help))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, self.handle_message))
 
