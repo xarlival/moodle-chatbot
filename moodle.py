@@ -156,6 +156,8 @@ class Moodle:
                                      .format(assignment['name'], duedate.strftime(self.date_format)))
                     response += '\n'
 
+            if response == '':
+                response = 'No tienes ninguna tarea pendiente de entregar. !Qué bien!'
         return response
 
     def assignment_grades(self, context: ContextTypes.DEFAULT_TYPE) -> str:

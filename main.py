@@ -111,7 +111,7 @@ class MoodleBot:
                 await self.show_user_options(update, "¿En qué más te puedo ayudar?")
             else:
                 self.logger.error('No response given to "' + user_input + '"')
-                await update.message.reply_text("Lo siento, no te he entendido")
+                await self.show_user_options(update, "Lo siento, no te he entendido. ¿En qué más te puedo ayudar?")
 
     async def send_message(self, update: Update, user_input: str, bot_output: str) -> None:
         if bot_output:
