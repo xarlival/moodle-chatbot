@@ -158,6 +158,7 @@ class Moodle:
 
             if response == '':
                 response = 'No tienes ninguna tarea pendiente de entregar. !Qué bien!'
+
         return response
 
     def assignment_grades(self, context: ContextTypes.DEFAULT_TYPE) -> str:
@@ -204,16 +205,21 @@ class Moodle:
 
         for courseid, course_pending_quizzes in courses.items():
             course_name = context.user_data['course_names'][context.user_data['courseids'].index(courseid)]
-            response += '\nEn la asignatura {} tienes los siguientes cuestionarios pendientes:'.format(course_name)
 
-            for quizz in course_pending_quizzes:
-                response += "\n• {}. ".format(quizz['name'])
+            if course_pending_quizzes:
+                response += '\nEn la asignatura {} tienes los siguientes cuestionarios pendientes:'.format(course_name)
 
-                if quizz['timeclose'] != 0:
-                    duedate = datetime.fromtimestamp(quizz['timeclose'])
-                    response += "Fecha límite: {}".format(duedate.strftime(self.date_format))
-                else:
-                    response += "Sin fecha límite."
+                for quizz in course_pending_quizzes:
+                    response += "\n• {}. ".format(quizz['name'])
+
+                    if quizz['timeclose'] != 0:
+                        duedate = datetime.fromtimestamp(quizz['timeclose'])
+                        response += "Fecha límite: {}".format(duedate.strftime(self.date_format))
+                    else:
+                        response += "Sin fecha límite."
+
+        if response == '':
+            response = 'No tienes ningún cuestionario pendiente. !Qué bien!'
 
         return response
 
@@ -222,11 +228,17 @@ class Moodle:
         timeend = int((datetime.now() + timedelta(days=7)).timestamp())
         events = self.get_calendar_events(context.user_data['courseids'], timestart, timeend)
         sorted_events = sorted(events, key=lambda x: x['timestart'])
-        response = 'En la próxima semana tienes los siguientes eventos:'
+        response = ''
 
-        for event in sorted_events:
-            duedate = datetime.fromtimestamp(event['timestart'])
-            response += '\n• {}: finaliza el {}'.format(event['name'], duedate.strftime(self.date_format))
+        if sorted_events:
+            response = 'En la próxima semana tienes los siguientes eventos:'
+
+            for event in sorted_events:
+                duedate = datetime.fromtimestamp(event['timestart'])
+                response += '\n• {}: finaliza el {}'.format(event['name'], duedate.strftime(self.date_format))
+
+        if response == '':
+            response = 'No hay ningún evento en la próxima semana. !Qué bien!'
 
         return response
 
